@@ -1,67 +1,80 @@
-# Remove Hidden Text and Comments from Word Documents using GroupDocs Redaction for Java
+# GroupDocs Redaction Java – Remove Hidden Text and Comments from Word
 
-This repository demonstrates how to remove hidden text and comments from a Word document before sharing it with external parties using GroupDocs Redaction for Java. The specialized redaction engine supports multiple document formats and compliance-oriented features to sanitize sensitive content reliably.
-
-## Problem
-When sharing Word documents externally, hidden text, tracked changes, and annotations (comments) may inadvertently expose internal notes, draft content, or personally identifiable information. Manual review is time-consuming and error-prone.
-
-## What This Example Shows
-This example uses GroupDocs Redaction for Java to:
-- Automatically delete all annotations (comments) from a Word document
-- Replace exact sensitive phrases (e.g., "Confidential", "Internal") with placeholder text
-- Save the sanitized document to a new file
-
-The result is a clean, production-ready document ready for external distribution.
-
-## How it works
-
-```mermaid
-flowchart LR
-    A["sample.docx (input)"] --> B["Redactor redactor = new Redactor(...)"]
-    B --> C["redactor.apply(new DeleteAnnotationRedaction())"]
-    C --> D["redactor.apply(new ExactPhraseRedaction(...))"]
-    D --> E["redactor.save('sanitized.docx')"]
-    E --> F["sanitized.docx (output)"]
-```
-
-**Important:** Ensure your input file (`sample.docx`) exists in `src/main/resources/input/` before running. The demo uses `sample.docx` as the default input.
-
-## Topics covered
-Remove hidden text and comments from a Word document before sharing it with external parties.
+## Overview
+This showcase project demonstrates how to use **GroupDocs Redaction** (Java) to delete comments from a Word document and redact sensitive phrases (including a hidden draft note) before the file is shared externally. It is a minimal, runnable Maven project that helps developers sanitize review markup and classification wording in one pass.
 
 ## Prerequisites
-- Java 8 or higher
-- Maven 3.x
+- **Java Development Kit (JDK) 8** or higher
+- **Apache Maven** 3.5+ installed and added to your `PATH`
+- An **Internet connection** for Maven to download dependencies
 
 ## License
-GroupDocs Redaction for Java requires a license for production use. You can:
-- [Request a free 30-day Temporary License](https://purchase.groupdocs.com/temporary-license)
-- [Purchase a license](https://purchase.groupdocs.com/buy)
+GroupDocs Redaction requires a license file to work without evaluation limitations (trial badge, one opened document per process, and so on).
+
+1. **Obtain a temporary license** – Visit https://purchase.groupdocs.com/temporary-license/ to get a free 30-day temporary license.
+2. **Place the license file** – Save the downloaded `GroupDocs.Redaction.Java.lic` file in the **project root directory** (the same level where `pom.xml` resides).
+3. **Without a license** – The library runs in evaluation mode, which adds a trial badge and opens only one document per process. Evaluation mode also applies only the first redaction object, so a license is recommended when you need both comment removal and phrase replacement together.
+
+## Project Structure
+```
+remove-hidden-text-comments-word-groupdocs-redaction-java/
+│   pom.xml
+│   README.md
+│   GroupDocs.Redaction.Java.lic   (optional – place your license here)
+│
+├───src
+│   └───main
+│       └───java
+│           └───com
+│               └───groupdocs
+│                   └───redaction
+│                       └───examples
+│                           └───RemoveHiddenTextCommentsWordExample.java
+│
+├───resources
+│   ├───input
+│   │   └───sample.docx            (sample Word document with comments – replace with your own)
+│   └───output                     (the sanitized document will be saved here)
+```
 
 ## Setup & Run
-
-1. Clone this repository.
-2. Place a sample Word document at `src/main/resources/input/sample.docx`.
-3. Run:
+1. **Clone or copy the project**
    ```bash
-   mvn compile exec:java
+   git clone https://github.com/your-repo/remove-hidden-text-comments-word-groupdocs-redaction-java.git
+   cd remove-hidden-text-comments-word-groupdocs-redaction-java
+   ```
+2. **Add your license file** (optional but recommended) – copy `GroupDocs.Redaction.Java.lic` into the project root.
+3. **Place a Word document** you want to sanitize inside `resources/input/`. The project already contains `sample.docx`, which you can replace.
+4. **Build the project**
+   ```bash
+   mvn clean compile
+   ```
+5. **Run the example**
+   ```bash
+   mvn exec:java
    ```
 
-The sanitized output will be saved to `src/main/resources/output/sanitized.docx`.
+## What Happens When You Run It?
+- The program loads the license (if present).
+- It checks `resources/input/sample.docx`. If the file is missing, execution stops with an error message.
+- An output directory `resources/output/` is created if it does not already exist.
+- `DeleteAnnotationRedaction` removes all comments from the document.
+- `ExactPhraseRedaction` replaces `Confidential`, `Internal`, and the hidden draft note `HIDDEN NOTE: vendor pricing from Acme must stay Internal.` with `[REDACTED]`.
+- Rasterization is turned off, so the file is saved as `resources/output/sample_redacted.docx`.
+- Console output informs you about the progress and the status of each redaction.
 
-## FAQ
+## Customization
+- **Remove only matching comments** – use `new DeleteAnnotationRedaction("(?im:(use|show|describe))")` instead of the no-argument constructor.
+- **Redact other phrases** – change the `ExactPhraseRedaction` arguments, or add another phrase object to the array.
+- **Hide a match with a color box** – pass `new ReplacementOptions(java.awt.Color.BLACK)` instead of a replacement string.
+- **Sanitize another document** – replace `resources/input/sample.docx`, or change `INPUT_FILE` in the source.
 
-**Q: Does this example redact tracked changes?**
-A: No. This example removes annotations and exact phrases. To redact tracked changes, use `DeleteAnnotationRedaction` with additional filtering or combine with metadata redactions.
+## Notes
+- The included `sample.docx` is an Internal Contoso briefing. It contains reviewer comments and the phrases used by the sample, including one run marked as hidden text in Word.
+- Evaluation mode applies only the first redaction object (`DeleteAnnotationRedaction`). Add a license when you also need the phrase replacements in the same run.
+- `Redactor.save()` with no arguments writes a rasterized PDF. This example disables rasterization so the output keeps the `.docx` extension.
+- Ensure the `resources/input/` and `resources/output/` directories are at the same level as `pom.xml` as shown in the structure above.
 
-**Q: Can I redact comments by author or content pattern?**
-A: Yes. Use `RegexRedaction` or `DeleteAnnotationRedaction` with a regex pattern to target specific comments.
+---
 
-**Q: Is the output document still editable?**
-A: Yes. The output remains a standard `.docx` file, but all redacted content is permanently removed.
-
-## Documentation
-For full details, see the [GroupDocs Redaction for Java Documentation](https://docs.groupdocs.com/redaction/java/).
-
-## Demo Entry Point
-See `src/main/java/com/groupdocs/redaction/examples/RemoveHiddenTextCommentsWordExample.java`. The `run()` method is written as **Steps 1–4** with comments explaining each operation.
+*This is a showcase project for GroupDocs Redaction. It is intended for demonstration and educational purposes.*

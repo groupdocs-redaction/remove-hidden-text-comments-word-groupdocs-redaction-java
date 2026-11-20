@@ -9,8 +9,8 @@
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>Remove Hidden Text and Comments from Word Documents using GroupDocs Redaction for Java</name>
-    <description>Specialized redaction engine to remove hidden text and comments from Word documents before sharing with external parties.</description>
+    <name>GroupDocs Redaction Java Remove Hidden Text and Comments from Word</name>
+    <description>Showcase project demonstrating comment removal and sensitive-phrase redaction in a Word document with GroupDocs Redaction.</description>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -30,7 +30,7 @@
         <dependency>
             <groupId>com.groupdocs</groupId>
             <artifactId>groupdocs-redaction</artifactId>
-            <version>26.7</version>
+            <version>26.11</version>
         </dependency>
     </dependencies>
 
